@@ -2,8 +2,6 @@
   form view를 담당한다
 
 */
-
-
 import View from './View.js'
 
 
