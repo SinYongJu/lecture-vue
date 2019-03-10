@@ -10,19 +10,14 @@ ResultView.message = {
 }
 
 ResultView.setup = function(el) {
-  this.init(el)
-  console.log(tag,'ResultView',this)
-
-  
+  this.init(el)  
   return this
 }
 
 
 ResultView.render = function(data = []){
-  console.log(tag , 'render()', data)
-  console.log(data.length)
   this.el.innerHTML = data.length ? this.getSearchResultHTML(data) : this.message.NO_RESULT_MESSAGE
- 
+  this.show()
 }
 
 ResultView.getSearchResultHTML = function (data){
@@ -42,6 +37,8 @@ ResultView.getSearchItemHTML = function(item){
     <p>${item.name}</p>
   </li>`
 }
+
+
 
 
 export default ResultView
