@@ -13,54 +13,37 @@
       <h2 class="container">검색</h2>
     </header>
     <div class="container">
-        <form action="" v-on:submit.prevent="onSubmit">
-          <input type="text" v-model="query" v-on:keyup="onKeyup" placeholder="검색어를 입력해주세요" autofocus>
-          <button v-show="query.length" class="btn-reset" type="reset" v-on:click="onReset"></button>
-        </form>
+        <search-form v-bind:value="query" 
+        v-on:@submit="onSubmit"
+        v-on:@reset="onReset"
+        ></search-form>
         <div v-if="submited"  class="content">
-            <div v-if="searchResult.length" id="search-result">
-                <ul class="list">
-                  <li v-for="item in searchResult" :key="item.name">
-                    <img v-bind:src="item.img" alt="">
-                    {{ item.name }}
-                  </li>
-                </ul>
-            </div>
-            <div v-else>
-              {{ query }} 검색어로 찾을 수 없습니다.
-            </div>
+          <result-component
+            v-bind:data="searchResult"
+            v-bind:query="query"
+          ></result-component>
         </div>
         <div v-else  class="content">
-          <ul class="tabs">
-            <li v-for="tab in tabs" v-bind:class="{active : tab === selectedTab }" :key="tab" v-on:click="onSelectTab(tab)">{{tab}}</li>
-          </ul>
+          <tabs 
+            v-bind:tabs="tabs"
+            v-bind:selected-Tab="selectedTab"
+            v-on:@change="onSelectTab"
+          ></tabs>
           <div v-if="selectedTab === tabs[0]">
-            <div v-if="keywords.length">
-              <ul class="list">
-                <li v-for="(item, index) in keywords" v-on:click="onClickKeyword(item.keyword)">
-                  <span class="number">{{ index+1 }}</span>
-                  {{ item.keyword }}
-                </li>
-              </ul>
-            </div>
-            <div v-else>
-              추천 검색어가 없습니다.
-            </div>
+            <list-component
+              v-bind:data="keywords"
+              type="keywords"
+              v-on:@click="onClickKeyword"
+            
+            ></list-component>
           </div>
           <div v-else>
-              <div v-if="historys.length">
-                  <ul class="list">
-                      <li v-for="(item, index) in historys" :key="item.keyword + index" v-on:click="onClickKeyword(item.keyword)">
-                        <span class="number">{{ index+1 }}</span>
-                        {{ item.keyword }}
-                        <span class="date">{{ item.date }}</span>
-                        <button type="button" class="btn-remove" v-on:click.stop="onRemoveHistory(item.keyword)"></button>
-                      </li>
-                    </ul>
-              </div>  
-              <div v-else>
-                최근 검색어가 없습니다
-              </div>
+            <list-component
+            v-bind:data="historys"
+            type="historys"
+            v-on:@click="onClickKeyword"
+            v-on:@remove="onRemoveHistory"
+          ></list-component>
           </div>
         </div>
     </div>
@@ -70,3 +53,50 @@
   <script type="module" src="./js/app.js"></script>
 </body>
 </html>
+
+<template id="search-form">
+  <form action="" v-on:submit.prevent="onSubmit">
+    <input type="text" v-model="inputValue" v-on:keyup="onKeyup" placeholder="검색어를 입력해주세요" autofocus>
+    <button v-show="inputValue.length" class="btn-reset" type="reset" v-on:click="onReset"></button>
+  </form>
+</template>
+<template id="result-component">
+  <div v-if="data.length" id="search-result">
+    <ul class="list">
+      <li v-for="item in data" :key="item.name">
+        <img v-bind:src="item.img" alt="">
+        {{ item.name }}
+      </li>
+    </ul>
+</div>
+<div v-else>
+  {{ query }} 검색어로 찾을 수 없습니다.
+</div>
+</template>
+
+<template id="list-component">
+  <div v-if="data.length">
+    <ul class="list">
+      <li v-for="(item, index) in data" v-on:click="onClickList(item.keyword)">
+        <span v-if="type ==='keywords'" class="number">{{ index+1 }}</span>
+        {{ item.keyword }}
+        <span v-if="type === 'historys' "class="date">{{ item.date }}</span>
+        <button v-if="type ==='historys'" type="button" class="btn-remove" v-on:click.stop="onRemovelist(item.keyword)"></button>
+      </li>
+    </ul>
+  </div>
+  <div v-else>
+    <div v-if="keywordType">
+      추천 검색어가 없습니다.
+    </div>
+    <div v-if="historyType">
+      최근 검색어가 없습니다.
+    </div> 
+  </div>
+</template>
+
+<template id='tabs'>
+  <ul class="tabs">
+    <li v-for="tab in tabs" v-bind:class="{active : tab === selectedTab }" :key="tab" v-on:click="onSelectTab(tab)">{{tab}}</li>
+  </ul>
+</template>

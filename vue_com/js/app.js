@@ -3,6 +3,11 @@ import SearchModel from '../js/models/SearchModel.js'
 import KeywordModel from '../js/models/KeywordModel.js'
 import HistoryModel from '../js/models/HistoryModel.js'
 
+import FormComponent from './components/FormComponent.js'
+import ResultComponent from './components/ResultComponent.js';
+import ListComponent from './components/ListComponent.js';
+import TabComponent from './components/TabComponent.js';
+
 new Vue({
   el : '#app',
   data : {
@@ -34,7 +39,7 @@ new Vue({
         this.historys = data
       })
     },
-    onClickKeyword : function(keyword){
+    onClickKeyword : function(keyword){      
       this.query = keyword
       this.search()
     },
@@ -46,46 +51,36 @@ new Vue({
     onSelectTab : function(tab){
       this.selectedTab = tab
     },
-    onSubmit : function(e){
-      //e.preventDefault()// plain에서는
-      this.search();
+   
+    onSubmit : function(query){
+      this.query = query
+      // e.preventDefault()// plain에서는
+     this.search();
       
     },
-    onReset : function(e){
-      this.onResetForm();
-    },
-    onKeyup : function(e){
-      if(!this.query.length)this.onReset() 
-    },
     search : function(){
-      SearchModel.list().then(data => {
+    SearchModel.list().then(data => {
         this.submited = true
         this.searchResult = data
-      })
-      this.addHistory()
+    })
+    this.addHistory()
     },
+    onReset : function(e){
+        this.onResetForm();
+    },
+
     onResetForm : function(){
-      this.query = ''
-      this.submited = false
-      this.searchResult = []
-    }
+    this.query = ''
+    this.submited = false
+    this.searchResult = []
+    },
+  },
+  components : {
+    'search-form' : FormComponent,
+    'result-component' : ResultComponent,
+    'list-component' : ListComponent,
+    'tabs' : TabComponent,
   }
 })
 
 
-/* 
-  
- 1.  v-model vue 인스턴스와 연결 (binding) 양방향 바인딩 지원
- 2.  v-show and condition 설정으로 x 버튼의 표기
- 3.  v-on <- 이벤트 리스너 
- 4.   검색 폼 구현
-
- 1. 검색 결과 구현
-  2. v-bind attr
-  
-  tab
-
-  1.  v-bind:class
-
-  돔 변경을 위해 미리 data 설정 해줘야함
-*/
