@@ -17,10 +17,10 @@
           <input type="text" v-model="query" v-on:keyup="onKeyup" placeholder="검색어를 입력해주세요" autofocus>
           <button v-show="query.length" class="btn-reset" type="reset" v-on:click="onReset"></button>
         </form>
-        <div v-if="submited"  class="container">
+        <div v-if="submited"  class="content">
             <div v-if="searchResult.length" id="search-result">
                 <ul class="list">
-                  <li v-for="item in searchResult">
+                  <li v-for="item in searchResult" :key="item.name">
                     <img v-bind:src="item.img" alt="">
                     {{ item.name }}
                   </li>
@@ -30,9 +30,9 @@
               {{ query }} 검색어로 찾을 수 없습니다.
             </div>
         </div>
-        <div v-else>
+        <div v-else  class="content">
           <ul class="tabs">
-            <li v-for="tab in tabs" v-bind:class="{active : tab === selectedTab }" v-on:click="onSelectTab(tab)">{{tab}}</li>
+            <li v-for="tab in tabs" v-bind:class="{active : tab === selectedTab }" :key="tab" v-on:click="onSelectTab(tab)">{{tab}}</li>
           </ul>
           <div v-if="selectedTab === tabs[0]">
             <div v-if="keywords.length">
@@ -50,7 +50,7 @@
           <div v-else>
               <div v-if="historys.length">
                   <ul class="list">
-                      <li v-for="(item, index) in historys" v-on:click="onClickKeyword(item.keyword)">
+                      <li v-for="(item, index) in historys" :key="item.keyword + index" v-on:click="onClickKeyword(item.keyword)">
                         <span class="number">{{ index+1 }}</span>
                         {{ item.keyword }}
                         <span class="date">{{ item.date }}</span>
@@ -64,6 +64,7 @@
           </div>
         </div>
     </div>
+
   </div>
   <script src="https://unpkg.com/vue"></script>
   <script type="module" src="./js/app.js"></script>
