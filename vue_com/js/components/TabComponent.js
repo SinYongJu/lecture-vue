@@ -1,6 +1,6 @@
 export default {
     template : '#tabs',
-    props : ['tabs','selected-Tab'],
+    props : ['tabs','selectedTab'],
     methods : {
         onSelectTab(tab){
             this.$emit('@change',tab)
